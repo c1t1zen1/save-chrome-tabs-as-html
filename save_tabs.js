@@ -1,47 +1,3 @@
-function mainAction() {
-  browser.tabs.query({}, saveTabs);
-}
-
-function onError(error) {
-  console.log(`Error : ${error}`);
-}
-
-function getDateYYYYMMDD(timestamp) {
-  var month_from_one = timestamp.getMonth() + 1;
-  var day = timestamp.getDate();
-  var year = timestamp.getFullYear();
-  var month_padded = month_from_one.toString().padStart(2, '0');
-  var day_padded = day.toString().padStart(2, '0');
-  var year_padded = year.toString().padStart(4, '0');
-  var date_string = year_padded + '-' + month_padded + '-' + day_padded;
-  return date_string;
-}
-
-function saveTabs(tabs) {
-  var now = new Date();
-
-  function getFilename(timestamp) {
-    var yyyymmdd = getDateYYYYMMDD(timestamp);
-    var filename = 'tabs_' + yyyymmdd + '_' + timestamp.getTime() + '.html';
-    return filename;
-  }
-  var payload = tabsToHTML(tabs, now);
-  // TODO: can this be formatted easily?
-  var serializer = new XMLSerializer();
-  var HTMLString = serializer.serializeToString(payload);
-  var payloadBlob = new Blob([HTMLString], {type: 'text/html'});
-  var payloadURL = URL.createObjectURL(payloadBlob);
-  var payload_filename = getFilename(now);
-  var downloading = browser.downloads.download({
-    url: payloadURL,
-    filename: payload_filename,
-    conflictAction: 'uniquify',
-    saveAs: true,
-  });
-  // Firefox for Android raises an error if `saveAs` is set to `true`.
-  // The parameter is ignored when `saveAs` is `false` or not included.
-}
-
 function tabsToHTML(tabs, now) {
   var allTabs = [];
   for (let tab of tabs) {
@@ -49,7 +5,6 @@ function tabsToHTML(tabs, now) {
       // skip private tabs
       continue;
     }
-    // tab.url and tab.title require the `tabs` permission
     var tabInfo = {
       'title' : tab.title,
       'url' : tab.url,
@@ -58,85 +13,110 @@ function tabsToHTML(tabs, now) {
   }
   var doc = document.implementation.createHTMLDocument(
     allTabs.length + ' browser tabs');
-  // https://developer.mozilla.org/en-US/docs/Web/API/DOMImplementation/createHTMLDocument
-  // creates html, head, title, and body
 
   var newMeta = document.createElement('meta');
   newMeta.setAttribute('charset', 'utf-8');
 
   var newStyle = document.createElement('style');
   newStyle.setAttribute('type', 'text/css');
-  newStyle.innerHTML = 'a { text-decoration: none; } dt { margin-top: 10px; } ';
+  newStyle.innerHTML = `
+    body { 
+      font-family: Arial, sans-serif; 
+      line-height: 1.6; 
+      color: #333; 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 20px; 
+    }
+    h1 { text-align: center; }
+    .tab-container { 
+      display: flex; 
+      flex-wrap: wrap; 
+      justify-content: space-between; 
+    }
+    .tab-item { 
+      width: 30%; 
+      margin-bottom: 20px; 
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      padding: 15px; 
+    }
+    .tab-item h2 { 
+      margin-top: 0; 
+      font-size: 18px; 
+    }
+    .tab-item a { 
+      text-decoration: none; 
+      color: #0066cc; 
+    }
+    .tab-item p { 
+      font-size: 14px; 
+      color: #666; 
+    }
+    .info-footer { 
+      margin-top: 40px; 
+      border-top: 1px solid #ccc; 
+      padding-top: 20px; 
+    }
+    @media (max-width: 768px) { 
+      .tab-item { width: 100%; } 
+    }
+  `;
 
   doc.head.appendChild(newMeta);
   doc.head.appendChild(newStyle);
 
-  var newUnorderedList = document.createElement('ul');
+  var headerElement = document.createElement('h1');
+  headerElement.textContent = allTabs.length + ' Saved Tabs';
+  doc.body.appendChild(headerElement);
 
-  var tabCount = document.createElement('li');
-  var userAgent = document.createElement('li');
-  var dateString = document.createElement('li');
-  var ISOString = document.createElement('li');
-  var localeString = document.createElement('li');
-  var JSONString = document.createElement('li');
-  var YYYYMMDDString = document.createElement('li');
-  var getTime = document.createElement('li');
-
-  tabCount.appendChild(
-    document.createTextNode(allTabs.length + ' tabs'));
-  userAgent.appendChild(
-    document.createTextNode('User agent: ' + navigator.userAgent));
-  dateString.appendChild(
-    document.createTextNode('Date: ' + now.toString()));
-  ISOString.appendChild(
-    document.createTextNode('ISO date: ' + now.toISOString()));
-  localeString.appendChild(
-    document.createTextNode('Locale date: ' + now.toLocaleString()));
-  JSONString.appendChild(
-    document.createTextNode('JSON date: ' + now.toJSON()));
-  YYYYMMDDString.appendChild(
-    document.createTextNode('YYYY-MM-DD (local): ' + getDateYYYYMMDD(now)
-  ));
-  getTime.appendChild(
-    document.createTextNode('Milliseconds since Unix epoch: ' + now.getTime()));
-
-  newUnorderedList.appendChild(tabCount);
-  newUnorderedList.appendChild(userAgent);
-  newUnorderedList.appendChild(dateString);
-  newUnorderedList.appendChild(ISOString);
-  newUnorderedList.appendChild(localeString);
-  newUnorderedList.appendChild(JSONString);
-  newUnorderedList.appendChild(YYYYMMDDString);
-  newUnorderedList.appendChild(getTime);
-
-  // TODO: would this be better as an ordered list?
-  var newDescriptionList = document.createElement('dl');
+  var tabContainer = document.createElement('div');
+  tabContainer.className = 'tab-container';
 
   for (let tab of allTabs) {
-    var newAnchor = document.createElement('a');
-    newAnchor.href = tab.url;
-    newAnchor.text = tab.title;
-    var newDescriptionTerm = document.createElement('dt');
-    newDescriptionTerm.appendChild(newAnchor);
-    var bareURL = document.createElement('a');
-    bareURL.href = tab.url;
-    bareURL.text = tab.url;
-    var newDescriptionDetails = document.createElement('dd');
-    newDescriptionDetails.appendChild(bareURL);
-    newDescriptionList.appendChild(newDescriptionTerm);
-    newDescriptionList.appendChild(newDescriptionDetails);
+    var tabItem = document.createElement('div');
+    tabItem.className = 'tab-item';
+
+    var titleElement = document.createElement('h2');
+    var titleLink = document.createElement('a');
+    titleLink.href = tab.url;
+    titleLink.textContent = tab.title;
+    titleElement.appendChild(titleLink);
+
+    var urlElement = document.createElement('p');
+    urlElement.textContent = tab.url;
+
+    tabItem.appendChild(titleElement);
+    tabItem.appendChild(urlElement);
+
+    tabContainer.appendChild(tabItem);
   }
-  doc.body.appendChild(newUnorderedList);
-  doc.body.appendChild(newDescriptionList);
+
+  doc.body.appendChild(tabContainer);
+
+  var infoFooter = document.createElement('div');
+  infoFooter.className = 'info-footer';
+
+  var infoList = document.createElement('ul');
+
+  var infoItems = [
+    allTabs.length + ' tabs',
+    'User agent: ' + navigator.userAgent,
+    'Date: ' + now.toString(),
+    'ISO date: ' + now.toISOString(),
+    'Locale date: ' + now.toLocaleString(),
+    'JSON date: ' + now.toJSON(),
+    'YYYY-MM-DD (local): ' + getDateYYYYMMDD(now),
+    'Milliseconds since Unix epoch: ' + now.getTime()
+  ];
+
+  infoItems.forEach(item => {
+    var li = document.createElement('li');
+    li.textContent = item;
+    infoList.appendChild(li);
+  });
+
+  infoFooter.appendChild(infoList);
+  doc.body.appendChild(infoFooter);
+
   return doc;
 }
-
-if (typeof browser === 'undefined') {
-  // For compatibility with Chrome or Chromium,
-  // make the 'browser' namespace a copy of the 'chrome' namespace.
-  var browser = chrome;
-  // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Build_a_cross_browser_extension
-  // https://stackoverflow.com/questions/45985198/the-best-practice-to-detect-whether-a-browser-extension-is-running-on-chrome-or
-}
-
-browser.browserAction.onClicked.addListener(mainAction);
