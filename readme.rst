@@ -1,13 +1,6 @@
 This saves all currently open tabs as HTML,
-similar to the `Netscape bookmark format`_.
 
-.. _Netscape bookmark format: https://docs.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/aa753582(v=vs.85)?redirectedfrom=MSDN
-
-https://addons.mozilla.org/en-US/firefox/addon/save-tabs-to-html-file/
-
-https://chrome.google.com/webstore/detail/save-tabs-as-html/dmnhgbenglfffoaodbgpfoihfnbdbfcb
-
-The idea is to turn browser tabs into an HTML document
+The idea is to turn browser tabs into an HTML document with column portal view.
 that looks something like this:
 
     - 7 tabs
