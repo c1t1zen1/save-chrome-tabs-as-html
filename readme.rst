@@ -8,8 +8,6 @@ Save Tabs as HTML
 
 **Turn your browser chaos into a beautifully organized HTML dashboard.**
 
-|Release| |License| |ChromeWebStore|
-
 About
 -----
 
@@ -48,9 +46,3 @@ Installation (Developer Mode)
 3.  Enable **Developer mode** in the top right.
 4.  Click **Load unpacked** and select the extension directory.
 
-.. |Release| image:: https://img.shields.io/github/v/release/c1t1zen/save-chrome-tabs-as-html?style=flat-square
-   :target: https://github.com/c1t1zen/save-chrome-tabs-as-html/releases
-.. |License| image:: https://img.shields.io/github/license/c1t1zen/save-chrome-tabs-as-html?style=flat-square
-   :target: LICENSE.txt
-.. |ChromeWebStore| image:: https://img.shields.io/chrome-web-store/v/save-chrome-tabs-as-html?style=flat-square
-   :target: https://chrome.google.com/webstore/detail/save-chrome-tabs-as-html
