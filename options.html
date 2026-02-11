@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Save Tabs as HTML - Options</title>
+    <style>
+        body {
+            padding: 20px 30px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-width: 350px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h2 {
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-weight: 600;
+            color: #0066cc;
+        }
+
+        .option {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #0066cc;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #0066cc;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        .label-text strong {
+            display: block;
+            font-size: 1em;
+            margin-bottom: 4px;
+        }
+
+        .label-text div {
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .status {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #28a745;
+            min-height: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .status.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Settings</h2>
+
+    <div class="option">
+        <label class="switch">
+            <input type="checkbox" id="openAndClose">
+            <span class="slider"></span>
+        </label>
+        <div class="label-text">
+            <strong>Open saved HTML & Close Tabs</strong>
+            <div>Automatically opens the saved file in a new tab and closes all other open tabs.</div>
+        </div>
+    </div>
+
+    <div class="option">
+        <label class="switch">
+            <input type="checkbox" id="autoSave">
+            <span class="slider"></span>
+        </label>
+        <div class="label-text">
+            <strong>Auto-save to Downloads</strong>
+            <div>Save directly to your default Downloads folder without showing the "Save As" dialog.</div>
+        </div>
+    </div>
+
+    <div id="status" class="status">Settings Saved</div>
+
+    <script src="options.js"></script>
+</body>
+
+</html>

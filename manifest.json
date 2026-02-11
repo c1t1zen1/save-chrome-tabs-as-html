@@ -1,25 +1,30 @@
 {
   "name": "Save tabs as HTML",
   "description": "Save list of open tabs as an HTML file.",
-  "manifest_version": 2,
-  "version": "0.4.0",
+  "manifest_version": 3,
+  "version": "0.5.0",
   "icons": {
-    "16":  "icons/icon16.png",
-    "32":  "icons/icon32.png",
-    "48":  "icons/icon48.png",
-    "64":  "icons/icon64.png",
-    "96":  "icons/icon96.png",
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "64": "icons/icon64.png",
+    "96": "icons/icon96.png",
     "128": "icons/icon128.png"
   },
   "permissions": [
     "tabs",
-    "downloads"
+    "downloads",
+    "storage"
   ],
-  "browser_action": {
+  "action": {
     "default_icon": "icons/icon128.png",
     "default_title": "Save tabs as HTML."
   },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
   "background": {
-    "scripts": ["save_tabs.js"]
+    "service_worker": "save_tabs.js"
   }
 }
