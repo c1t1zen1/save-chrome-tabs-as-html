@@ -136,7 +136,70 @@
         </div>
     </div>
 
+    <!-- Export Format -->
+    <div class="option">
+        <div style="width: 100%;">
+            <div class="label-text" style="margin-bottom: 10px;">
+                <strong>Export Format</strong>
+                <div>Select the file format for your saved tabs.</div>
+            </div>
+            <select id="exportFormat" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                <option value="html">HTML (Dashboard)</option>
+                <option value="md">Markdown (.md)</option>
+                <option value="csv">CSV (.csv)</option>
+                <option value="json">JSON (.json)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Chronological Append / History Mode -->
+    <div class="option">
+        <label class="switch">
+            <input type="checkbox" id="enableHistory">
+            <span class="slider"></span>
+        </label>
+        <div class="label-text">
+            <strong>Chronological History Log</strong>
+            <div>
+                Instead of just saving current tabs, append them to a cumulative history log.
+                <br><em>(Note: This regenerates a "Master History" file containing all previously saved sessions.)</em>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Blocklist -->
+    <div class="option" style="display: block;">
+        <div class="label-text" style="margin-bottom: 10px;">
+            <strong>Privacy Blocklist</strong>
+            <div>Enter domains to exclude (one per line). Example: <code>gmail.com</code>, <code>bank.com</code></div>
+        </div>
+        <textarea id="blocklist" rows="5"
+            style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc; font-family: monospace;"
+            placeholder="example.com&#10;secret-site.org"></textarea>
+    </div>
+
     <div id="status" class="status">Settings Saved</div>
+
+    <!-- Session History Manager -->
+    <div class="option" style="display: block; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+        <div class="label-text" style="margin-bottom: 15px;">
+            <strong>Manage Session History</strong>
+            <div>View and delete past saved sessions from the extension's storage.</div>
+        </div>
+
+        <div id="sessionList"
+            style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; background: #fff; padding: 10px; margin-bottom: 10px;">
+            <div style="color: #999; text-align: center; padding: 20px;">Loading history...</div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div id="historyCount" style="font-size: 0.85em; color: #666;"></div>
+            <button id="clearAllHistory" class="danger" style="padding: 6px 12px; font-size: 0.9em;">Clear All
+                History</button>
+        </div>
+        <div id="managerStatus"
+            style="font-size: 0.85em; color: #28a745; margin-top: 5px; text-align: right; min-height: 1.2em;"></div>
+    </div>
 
     <script src="options.js"></script>
 </body>
